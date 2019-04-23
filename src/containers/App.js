@@ -1,21 +1,8 @@
 import React, { Component } from "react";
 // import { useState } from 'react';
+import Persons from "../components/Persons/Persons";
+import Cockpit from "../components/Cockpit/Cockpit";
 import "./App.css";
-import Person from "./Person/Person";
-import styled from "styled-components";
-
-const Button = styled.button`
-  background-color: ${props => (props.showPerson ? "red" : "green")};
-  color: white;
-  font: inherit;
-  border: 1px solid blue;
-  padding: 8px;
-  cursor: pointer;
-  :hover {
-    background-color: ${props => (props.showPerson ? "salmon" : "lightgreen")};
-    color: black;
-  }
-`;
 
 class App extends Component {
   state = {
@@ -35,7 +22,7 @@ class App extends Component {
   //     ]
   //   })
   // }
-  nameChangedHandler = (id, e) => {
+  nameChangedHandler = (e, id) => {
     const personIndex = this.state.persons.findIndex(p => {
       return p.id === id;
     });
@@ -65,52 +52,23 @@ class App extends Component {
 
     if (this.state.showPersons) {
       persons = (
-        <div>
-          {this.state.persons.map((person, idx) => {
-            return (
-              <Person
-                name={person.name}
-                age={person.age}
-                click={this.deletePersonHandler.bind(this, idx)}
-                key={person.id}
-                changed={this.nameChangedHandler.bind(this, person.id)}
-              />
-            );
-          })}
-          {/* <Person name={this.state.persons[0].name} age={this.state.persons[0].age} key/> */}
-          {/* Using bind is better for performance but this also works: */}
-          {/* <Person 
-            name={this.state.persons[1].name} 
-            age={this.state.persons[1].age} 
-            click={() => this.switchNameHandler('Maximilian!')} 
-            changed={this.nameChangedHandler}
-          >My hobbies are: Racing</Person> 
-          <Person name={this.state.persons[2].name} age={this.state.persons[1].age} /> */}
-        </div>
+        <Persons
+          persons={this.state.persons}
+          clicked={this.deletePersonHandler}
+          changed={this.nameChangedHandler}
+        />
       );
-    }
-
-    const classes = [];
-    if (this.state.persons.length <= 2) {
-      classes.push("red");
-    }
-    if (this.state.persons.length <= 1) {
-      classes.push("bold");
     }
 
     return (
       <div className="App">
-        <h1>Hi I'm a react app</h1>
-        <p className={classes.join(" ")}>This is really working!</p>
-        <Button
-          onClick={this.togglePersonsHandler}
-          showPerson={this.state.showPersons}
-        >
-          Switch Name
-        </Button>
+        <Cockpit
+          length={this.state.persons.length}
+          show={this.state.showPersons}
+          click={this.togglePersonsHandler}
+        />
         {persons}
       </div>
-      // This happens behind the scene: return React.createElement('div', {className: 'App'}, React.createElement('h1', null, "Hello friend."))
     );
   }
 }
